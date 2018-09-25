@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
                     requestPermission();
                 }
 
-                if (canRecord)
+                if (canRecord) {
                     recordAudio();
+                }
             }
         });
 
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             case 100: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    recordResult = result.get(0).toLowerCase();
+                    recordResult = result.get(0);
                     resultAudioRecord.setText(recordResult);
 
                 }
