@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,14 +24,16 @@ public class MainActivity extends AppCompatActivity {
     private String recordResult = "";
     private TextView resultAudioRecord;
     private ImageButton recordButton;
+    private Button dialogButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        resultAudioRecord = findViewById(R.id.result_record);
+        resultAudioRecord = findViewById(R.id.resultRecord);
         recordButton = findViewById(R.id.recordButton);
+        dialogButton = findViewById(R.id.dialogButton);
 
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
                 if (canRecord) {
                     recordAudio();
                 }
+            }
+        });
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/result_record"
+        android:id="@+id/resultRecord"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
@@ -15,7 +15,7 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/border"
         android:gravity="center"
-        android:hint="Dites quelque chose ! :-)"
+        android:hint="@string/result_record_hint"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -26,7 +26,17 @@
         android:layout_marginTop="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/result_record"
-        android:contentDescription="start the record" />
+        app:layout_constraintTop_toBottomOf="@+id/resultRecord"
+        android:contentDescription="@string/record_content_desc" />
+
+    <Button
+        android:id="@+id/dialogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/dialog_button_value"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recordButton" />
 
 </android.support.constraint.ConstraintLayout>
