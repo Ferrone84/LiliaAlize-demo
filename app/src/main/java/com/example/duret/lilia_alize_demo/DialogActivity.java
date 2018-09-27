@@ -1,9 +1,8 @@
 package com.example.duret.lilia_alize_demo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-public class DialogActivity extends AppCompatActivity {
+public class DialogActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
