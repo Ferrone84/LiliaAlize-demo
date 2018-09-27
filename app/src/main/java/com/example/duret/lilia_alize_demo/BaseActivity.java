@@ -1,14 +1,17 @@
 package com.example.duret.lilia_alize_demo;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.widget.Toast;
 
 import java.util.Locale;
+import java.util.Map;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 
@@ -30,6 +33,21 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    protected void startActivity(Class targetActivity) {
+        startActivity(targetActivity, null);
+    }
+
+    protected void startActivity(Class targetActivity, Map<String, Object> params) {
+        Intent intent = new Intent(BaseActivity.this, targetActivity);
+
+        if (params != null) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                intent.putExtra(entry.getKey(), entry.getValue().toString());
+            }
+        }
+        startActivity(intent);
     }
 
     protected void readText(CharSequence text) {

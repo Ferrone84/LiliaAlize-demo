@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -58,8 +60,11 @@ public class MainActivity extends BaseActivity {
     private View.OnClickListener dialogButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, DialogActivity.class);
-            startActivity(intent);
+            //startActivity(DialogActivity.class); simple use of startActivity
+            Map<String, Object> extras = new HashMap<>();
+            extras.put("testInt", 12);
+            extras.put("testStr", "salut");
+            startActivity(DialogActivity.class, extras); //use with extras
         }
     };
 
