@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Lilia-Alize_demo</string>
-    <string name="dialog_activity_name">Mode Dialogue</string>
-    <string name="result_record_hint">Dites quelque chose</string>
+    <string name="start_activity_name">Mode Dialogue</string>
     <string name="record_content_desc">Lancer l\'enregistrement</string>
-    <string name="dialog_button_value">Mode dialogue</string>
+    <string name="start_button_value">Commençons</string>
+    <string name="intro_description">Texte de description</string>
+    <string name="hello_activity_name">Bonjour</string>
 </resources>
