@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/liaLogo"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_lia_logo"
         android:contentDescription="LIA logo"
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/introductionText"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"

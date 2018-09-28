@@ -2,29 +2,41 @@ package com.example.duret.lilia_alize_demo;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.Manifest.permission.RECORD_AUDIO;
+import AlizeSpkRec.AlizeException;
+import AlizeSpkRec.SimpleSpkDetSystem;
 
 public class BaseActivity extends AppCompatActivity {
 
     protected Locale defaultLanguage;
     protected TextToSpeech textToSpeech;
+    protected SimpleSpkDetSystem alizeSystem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         defaultLanguage = Locale.getDefault();
+
+        try {
+            simpleSpkDetSystemInit();
+        }
+        catch (AlizeException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -34,6 +46,14 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     protected void startActivity(Class targetActivity) {
@@ -69,16 +89,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(getApplicationContext(),
-                RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    protected void requestPermission() {
-        ActivityCompat.requestPermissions(BaseActivity.this, new
-                String[]{RECORD_AUDIO}, 1);
-    }
-
     protected void makeToast(String text) {
         Toast.makeText(BaseActivity.this, text, Toast.LENGTH_SHORT).show();
     }
@@ -91,6 +101,16 @@ public class BaseActivity extends AppCompatActivity {
             shortArray[index] = (short) byteArray[index];
 
         return shortArray;
+    }
+
+    private void simpleSpkDetSystemInit() throws IOException, AlizeException {
+        // Initialization:
+        alizeSystem = SharedAlize.getInstance(getApplicationContext());
+
+        // We also load the background model from the application assets
+        InputStream backgroundModelAsset = getApplicationContext().getAssets().open("gmm/world.gmm");
+        alizeSystem.loadBackgroundModel(backgroundModelAsset);
+        backgroundModelAsset.close();
     }
 
 }

@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">Lilia-Alize_demo</string>
+    <string name="app_name">Lilia-Alize demo</string>
     <string name="dialog_activity_name">DialogActivity</string>
     <string name="record_content_desc">Start the record</string>
     <string name="start_button_value">Let\'s get started</string>
     <string name="intro_description">DescText</string>
     <string name="hello_activity_name">HelloActivity</string>
+    <string name="hello_description">Hello! How are you today? :-)</string>
+    <string name="permission_error_message">You cannot use this app without this permission.</string>
+    <string name="default_time">00:00:00</string>
+    <string name="recording_completed">Recording Completed</string>
 </resources>

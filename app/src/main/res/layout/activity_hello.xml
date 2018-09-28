@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/introductionText"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/border"
+        android:gravity="center"
+        android:text="@string/hello_description"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startRecordButton"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_record_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introductionText" />
+
+    <Button
+        android:id="@+id/stopRecordButton"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_pause_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introductionText"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stopRecordButton"
+        android:textSize="42sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopRecordButton"
+        android:text="@string/default_time"/>
 
 </android.support.constraint.ConstraintLayout>
