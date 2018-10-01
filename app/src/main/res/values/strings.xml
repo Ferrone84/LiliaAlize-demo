@@ -11,4 +11,15 @@
     <string name="recording_completed">Recording Completed</string>
     <string name="hello_message_start">Hello</string>
     <string name="hello_message_end">we are now going to start our dialog.</string>
+    <string name="new_speaker_text">Unfortunately we couldn\'t identity you. Please do it bellow by setting your name or by editing an existing speaker model in the list.</string>
+    <string name="speaker_name">Speaker name</string>
+    <string name="add_speaker_button">Apply</string>
+    <string name="addspeaker_activity_name">Add Speaker</string>
+    <string name="update_speaker">Update</string>
+    <string name="empty" />
+    <string name="no_speakers">There are no speakers in the system at the moment.</string>
+    <string name="add_speakername_start">Adding speaker</string>
+    <string name="add_speakername_end">in the list.</string>
+    <string name="update_speakermodel">You have updated well the model of</string>
+    <string name="speakerId_already_exists">This speaker already exists.</string>
 </resources>

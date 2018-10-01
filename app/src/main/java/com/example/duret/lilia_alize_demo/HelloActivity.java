@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import AlizeSpkRec.AlizeException;
-import AlizeSpkRec.IdAlreadyExistsException;
 import AlizeSpkRec.SimpleSpkDetSystem;
 
 public class HelloActivity extends RecordActivity {
@@ -39,16 +38,18 @@ public class HelloActivity extends RecordActivity {
         try {
             long speakerCount = alizeSystem.speakerCount();
 
+            //add the speaker to the system
             if (speakerCount == 0) {
-                //add the speaker to the system
-                alizeSystem.createSpeakerModel("Steven");
+                startActivity(NewSpeakerActivity.class);
+                return;
             }
 
             //try to identify the speaker
             SimpleSpkDetSystem.SpkRecResult identificationResult = alizeSystem.identifySpeaker();
             System.out.println(identificationResult.match + "/" + identificationResult.score +"/"+identificationResult.speakerId);
-            if (identificationResult.speakerId.equals("UBM")) {
 
+            if (identificationResult.speakerId.equals("UBM")) {
+                startActivity(NewSpeakerActivity.class);
             }
             else {
                 say(
@@ -56,12 +57,9 @@ public class HelloActivity extends RecordActivity {
                     + identificationResult.speakerId
                     + getResources().getString(R.string.hello_message_end)
                 );
+                startActivity(NewSpeakerActivity.class);
             }
-            alizeSystem.resetAudio();
-            alizeSystem.resetFeatures();
         } catch (AlizeException e) {
-            e.printStackTrace();
-        } catch (IdAlreadyExistsException e) {
             e.printStackTrace();
         }
     }

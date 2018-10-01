@@ -11,4 +11,15 @@
     <string name="recording_completed">Enregistrement effectué.</string>
     <string name="hello_message_start">Bonjour</string>
     <string name="hello_message_end">nous allons maintenant commencer notre discussion.</string>
+    <string name="new_speaker_text">Malheureusement nous n\'avons pas pu vous identifier. Veuillez le faire en saisissant votre nom ou en éditant un modèle déjà existant dans la liste.</string>
+    <string name="speaker_name">Votre nom</string>
+    <string name="add_speaker_button">Valider</string>
+    <string name="addspeaker_activity_name">Nouvel utilisateur</string>
+    <string name="update_speaker">Modifier</string>
+    <string name="empty" />
+    <string name="no_speakers">Il n\'existe aucun locuteur pour le moment.</string>
+    <string name="add_speakername_start">Ajout du locuteur</string>
+    <string name="add_speakername_end">dans la liste.</string>
+    <string name="update_speakermodel">Vous avez bien mit à jours le modèle de</string>
+    <string name="speakerId_already_exists">Ce locuteur existe déjà.</string>
 </resources>

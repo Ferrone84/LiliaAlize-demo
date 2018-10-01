@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import AlizeSpkRec.AlizeException;
 
@@ -35,6 +34,7 @@ public class RecordActivity extends BaseActivity {
     protected int bytesPerElement = 2; // 2 bytes in 16bit format
 
     protected long startTime;
+    private boolean recordExists = false;
     protected AudioRecord recorder = null;
     protected Button startRecordButton, stopRecordButton;
     protected Thread recordingThread = null, addSamplesThread = null;
@@ -112,11 +112,14 @@ public class RecordActivity extends BaseActivity {
                 RECORDER_AUDIO_ENCODING, bufferElements2Rec * bytesPerElement);
         recorder.startRecording();
 
-        try {
-            alizeSystem.resetAudio();
-            alizeSystem.resetFeatures();
-        } catch (AlizeException e) {
-            e.printStackTrace();
+        if (recordExists) {
+            try {
+                alizeSystem.resetAudio();
+                alizeSystem.resetFeatures();
+            } catch (AlizeException e) {
+                e.printStackTrace();
+            }
+            recordExists = false;
         }
 
         final List<short[]> audioPackets = Collections.synchronizedList(new ArrayList<short[]>());
@@ -204,7 +207,6 @@ public class RecordActivity extends BaseActivity {
 
         recordingThread.start();
         addSamplesThread.start();
-
     }
 
     protected void stopRecording() {
@@ -220,6 +222,7 @@ public class RecordActivity extends BaseActivity {
             }
             recorder.release();
             recorder = null;
+            recordExists = true;
             recordingThread = null;
             addSamplesThread = null;
             startRecordButton.setVisibility(View.VISIBLE);
