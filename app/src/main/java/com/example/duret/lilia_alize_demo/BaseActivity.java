@@ -1,9 +1,7 @@
 package com.example.duret.lilia_alize_demo;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -73,20 +71,6 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void say(CharSequence text) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
-    }
-
-    protected void recordAudio() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, defaultLanguage);
-        intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
-        intent.putExtra("android.speech.extra.GET_AUDIO", true);
-
-        try {
-            startActivityForResult(intent, 100);
-        } catch (ActivityNotFoundException a) {
-            makeToast(a.getMessage());
-        }
     }
 
     protected void makeToast(String text) {

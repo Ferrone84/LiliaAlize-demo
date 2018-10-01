@@ -1,11 +1,14 @@
 package com.example.duret.lilia_alize_demo;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -62,6 +65,32 @@ public class RecordActivity extends BaseActivity {
                 }
                 else {
                     makeToast(getResources().getString(R.string.permission_error_message));
+                }
+                break;
+            }
+        }
+    }
+
+    protected void recordAudioSpeakToText() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, defaultLanguage);
+
+        try {
+            startActivityForResult(intent, 100);
+        } catch (ActivityNotFoundException a) {
+            makeToast(a.getMessage());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 100: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String recordResult = result.get(0).toLowerCase();
                 }
                 break;
             }

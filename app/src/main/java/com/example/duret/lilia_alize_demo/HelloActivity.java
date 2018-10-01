@@ -3,6 +3,10 @@ package com.example.duret.lilia_alize_demo;
 import android.os.Bundle;
 import android.view.View;
 
+import AlizeSpkRec.AlizeException;
+import AlizeSpkRec.IdAlreadyExistsException;
+import AlizeSpkRec.SimpleSpkDetSystem;
+
 public class HelloActivity extends RecordActivity {
 
     @Override
@@ -32,8 +36,33 @@ public class HelloActivity extends RecordActivity {
 
     @Override
     protected void recordProcessing() {
-        //si la base est vide on vérifie rien et on propose l'ajout
-        //si la base contient des users on fait une identification
-        makeToast("recordProcessing");
+        try {
+            long speakerCount = alizeSystem.speakerCount();
+
+            if (speakerCount == 0) {
+                //add the speaker to the system
+                alizeSystem.createSpeakerModel("Steven");
+            }
+
+            //try to identify the speaker
+            SimpleSpkDetSystem.SpkRecResult identificationResult = alizeSystem.identifySpeaker();
+            System.out.println(identificationResult.match + "/" + identificationResult.score +"/"+identificationResult.speakerId);
+            if (identificationResult.speakerId.equals("UBM")) {
+
+            }
+            else {
+                say(
+                    getResources().getString(R.string.hello_message_start)
+                    + identificationResult.speakerId
+                    + getResources().getString(R.string.hello_message_end)
+                );
+            }
+            alizeSystem.resetAudio();
+            alizeSystem.resetFeatures();
+        } catch (AlizeException e) {
+            e.printStackTrace();
+        } catch (IdAlreadyExistsException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -9,4 +9,6 @@
     <string name="permission_error_message">You cannot use this app without this permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Recording Completed</string>
+    <string name="hello_message_start">Hello</string>
+    <string name="hello_message_end">we are now going to start our dialog.</string>
 </resources>

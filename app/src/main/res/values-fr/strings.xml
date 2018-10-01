@@ -9,4 +9,6 @@
     <string name="permission_error_message">Vous ne pouvez pas utiliser cette app sans cette permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Enregistrement effectué.</string>
+    <string name="hello_message_start">Bonjour</string>
+    <string name="hello_message_end">nous allons maintenant commencer notre discussion.</string>
 </resources>
