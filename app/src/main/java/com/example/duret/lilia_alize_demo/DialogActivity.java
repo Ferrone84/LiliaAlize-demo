@@ -2,10 +2,12 @@ package com.example.duret.lilia_alize_demo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -70,49 +72,74 @@ public class DialogActivity extends RecordActivity {
 
         private Socket sock;
         private BufferedReader in;
+        private Handler handler = new Handler();
+
+        private void setTextofView(String text, int idView)
+        {
+            final String finalText = text;
+            final int finalIdView = idView;
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    TextView textView = findViewById(finalIdView);
+                    textView.setText(finalText);
+                }
+            });
+        }
 
         @Override
         public void run() {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
             try
             {
-                sock = new Socket("10.126.2.117", 8080); //TODO: menu connection with text input for host and port
+                String ip = ((EditText)findViewById(R.id.editIP)).getText().toString();
+                int port = Integer.parseInt(((EditText)findViewById(R.id.editPORT)).getText().toString());
+                sock = new Socket(ip, port); //TODO: menu connection with text input for host and port
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 
                 String fromClient;
                 while(true)
                 {
-                    fromClient = in.readLine();
-                    if(fromClient != null && fromClient.startsWith("t;"))
+                    try
                     {
-                        System.out.println("Receive: " + fromClient.substring(2));
-                        TextView textView = (TextView)findViewById(R.id.text);
-                        textView.setText(fromClient.substring(2));
-                        recordAudioSpeakToText();
+                        fromClient = in.readLine();
+                        if(fromClient != null && fromClient.startsWith("t;"))
+                        {
+                            System.out.println("Receive: " + fromClient.substring(2));
+                            setTextofView(fromClient.substring(2), R.id.text);
+                            recordAudioSpeakToText();
+                        }
+                        else if(fromClient != null && fromClient.startsWith("f;"))
+                        {
+                            System.out.println("Receive fruit: " + fromClient.substring(2));
+                            setTextofView(fromClient.substring(2), R.id.fruit);
+                        }
                     }
-                    else if(fromClient != null && fromClient.startsWith("f;"))
+                    catch (Exception e)
                     {
-                        System.out.println("Receive fruit: " + fromClient.substring(2));
-                        TextView textView = (TextView)findViewById(R.id.fruit);
-                        textView.setText(fromClient.substring(2));
+                        System.err.println(e.getStackTrace());
+                        //makeToast(e.getMessage());
                     }
                 }
             }
             catch (java.net.UnknownHostException e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
         }
 
@@ -120,6 +147,7 @@ public class DialogActivity extends RecordActivity {
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+
             try
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
@@ -127,13 +155,13 @@ public class DialogActivity extends RecordActivity {
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
         }
 
@@ -148,13 +176,13 @@ public class DialogActivity extends RecordActivity {
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e);
-                makeToast(e.getMessage());
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
             }
         }
     }
