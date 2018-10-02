@@ -1,8 +1,6 @@
 package com.example.duret.lilia_alize_demo;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
@@ -18,8 +16,8 @@ import java.util.ArrayList;
 
 public class DialogActivity extends RecordActivity {
 
-    private SendMessage message;
     private Thread thread;
+    private SendMessage message = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +30,14 @@ public class DialogActivity extends RecordActivity {
 
         Button reconnectButton = findViewById(R.id.reconnectButton);
         reconnectButton.setOnClickListener(reconnectButtonListener);
-
     }
 
     private View.OnClickListener startButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            message.start();
+            if (message != null) {
+                message.start();
+            }
         }
     };
 
@@ -58,7 +57,7 @@ public class DialogActivity extends RecordActivity {
             case 100: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String recordResult = result.get(0).toLowerCase();
+                    String recordResult = result.get(0);
 
                     message.send(recordResult);
                 }
@@ -67,18 +66,16 @@ public class DialogActivity extends RecordActivity {
         }
     }
 
-
-
     private class SendMessage implements Runnable {
 
         private Socket sock;
         private BufferedReader in;
 
+        @Override
         public void run() {
 
             try
             {
-
                 sock = new Socket("10.126.2.117", 8080); //TODO: menu connection with text input for host and port
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
@@ -105,16 +102,17 @@ public class DialogActivity extends RecordActivity {
             catch (java.net.UnknownHostException e)
             {
                 System.err.println(e);
-                //makeToast(e.getMessage());
+                makeToast(e.getMessage());
             }
             catch (java.io.IOException e)
             {
                 System.err.println(e);
-                //makeToast(e.getMessage());
+                makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 System.err.println(e);
+                makeToast(e.getMessage());
             }
         }
 
@@ -130,14 +128,13 @@ public class DialogActivity extends RecordActivity {
             catch (java.io.IOException e)
             {
                 System.err.println(e);
-                //makeToast(e.getMessage());
+                makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 System.err.println(e);
+                makeToast(e.getMessage());
             }
-
-
         }
 
         protected void send(String message)
@@ -152,14 +149,13 @@ public class DialogActivity extends RecordActivity {
             catch (java.io.IOException e)
             {
                 System.err.println(e);
-                //makeToast(e.getMessage());
+                makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 System.err.println(e);
+                makeToast(e.getMessage());
             }
-
-
         }
     }
 
