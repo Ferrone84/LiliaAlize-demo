@@ -58,6 +58,7 @@ public class HelloActivity extends RecordActivity {
                     + getResources().getString(R.string.hello_message_end)
                 );
                 startActivity(NewSpeakerActivity.class);
+                //TODO launch dialogActivity
             }
         } catch (AlizeException e) {
             e.printStackTrace();

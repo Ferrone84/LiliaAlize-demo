@@ -49,6 +49,32 @@ public class NewSpeakerActivity extends BaseActivity {
         }
     }
 
+    public void updateSpeakerOnClickHandler(View v) {
+        try {
+            Speaker speaker = (Speaker)v.getTag();
+            alizeSystem.adaptSpeakerModel(speaker.getName());
+            alizeSystem.resetAudio();
+            alizeSystem.resetFeatures();
+            makeToast(getString(R.string.update_speakermodel)+" '"+speaker.getName()+"'.");
+        } catch (AlizeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeSpeakerOnClickHandler(View v) {
+        Speaker itemToRemove = (Speaker)v.getTag();
+        String speakerId = itemToRemove.getName();
+        try {
+            if (!speakerId.isEmpty()) {
+                alizeSystem.removeSpeaker(speakerId);
+            }
+            list.remove(itemToRemove);
+            updateListViewContent();
+        } catch (AlizeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private TextWatcher addSpeakerEditTextListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -60,11 +86,15 @@ public class NewSpeakerActivity extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (speakerName.isEmpty()) {
-                addSpeakerButton.setEnabled(false);
-            }
-            else {
-                addSpeakerButton.setEnabled(true);
+            try {
+                if (speakerName.isEmpty() || speakerAlreadyExist(speakerName)) {
+                    addSpeakerButton.setEnabled(false);
+                }
+                else {
+                    addSpeakerButton.setEnabled(true);
+                }
+            } catch (AlizeException e) {
+                e.printStackTrace();
             }
         }
     };
@@ -74,9 +104,15 @@ public class NewSpeakerActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             try {
+                if (speakerAlreadyExist(speakerName)) {
+                    makeToast(getString(R.string.speakerId_already_exists));
+                    return;
+                }
+
                 alizeSystem.createSpeakerModel(speakerName);
                 alizeSystem.resetAudio();
                 alizeSystem.resetFeatures();
+                addSpeakerButton.setEnabled(false);
 
                 clearAndFillSpeakersList();
                 updateListViewContent();
@@ -120,30 +156,12 @@ public class NewSpeakerActivity extends BaseActivity {
         }
     }
 
-    public void updateSpeakerOnClickHandler(View v) {
-        try {
-            Speaker speaker = (Speaker)v.getTag();
-            alizeSystem.adaptSpeakerModel(speaker.getName());
-            alizeSystem.resetAudio();
-            alizeSystem.resetFeatures();
-            makeToast(getString(R.string.update_speakermodel)+" '"+speaker.getName()+"'.");
-        } catch (AlizeException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeSpeakerOnClickHandler(View v) {
-        Speaker itemToRemove = (Speaker)v.getTag();
-        String speakerId = itemToRemove.getName();
-        try {
-            if (!speakerId.isEmpty()) {
-                alizeSystem.removeSpeaker(speakerId);
+    private boolean speakerAlreadyExist(String speakerName) throws AlizeException {
+        for (String name : alizeSystem.speakerIDs()) {
+            if (name.toLowerCase().equals(speakerName.toLowerCase())) {
+                return true;
             }
-            list.remove(itemToRemove);
-            updateListViewContent();
-        } catch (AlizeException e) {
-            System.out.println(e.getMessage());
         }
+        return false;
     }
-
 }
