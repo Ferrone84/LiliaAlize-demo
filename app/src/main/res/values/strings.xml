@@ -5,13 +5,13 @@
     <string name="start_button_value">Let\'s get started</string>
     <string name="intro_description">DescText</string>
     <string name="hello_activity_name">HelloActivity</string>
-    <string name="hello_description">Hello! How are you today? :-)</string>
+    <string name="hello_description">How are you today? :-)</string>
     <string name="permission_error_message">You cannot use this app without this permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Recording Completed</string>
     <string name="hello_message_start">Hello</string>
     <string name="hello_message_end">we are now going to start our dialog.</string>
-    <string name="new_speaker_text">Unfortunately we couldn\'t identity you. Please do it bellow by setting your name or by editing an existing speaker model in the list.</string>
+    <string name="new_speaker_text">We couldn\'t identity you. Please do it bellow by setting your name or by editing an existing speaker model in the list.</string>
     <string name="speaker_name">Speaker name</string>
     <string name="add_speaker_button">Apply</string>
     <string name="addspeaker_activity_name">Add Speaker</string>

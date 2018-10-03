@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginRight="5dp"
-        android:textAllCaps="false"
+        android:layout_marginTop="15dp"
         android:text="Commencer"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/reconnectButton"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toStartOf="@+id/reconnectButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/startButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/reconnectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"
-        android:textAllCaps="false"
+        android:layout_marginTop="15dp"
         android:text="Reconnecter"
-        app:layout_constraintLeft_toLeftOf="@id/startButton"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/toggleButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/fruit"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/border"
         android:gravity="center"
         android:text="Fruit"
@@ -49,9 +61,9 @@
         android:id="@+id/editIP"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/border"
         android:gravity="center"
         android:inputType="text"
@@ -63,9 +75,9 @@
         android:id="@+id/editPORT"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/border"
         android:gravity="center"
         android:inputType="number"
@@ -83,8 +95,8 @@
         android:background="@drawable/border"
         android:gravity="bottom|center"
         android:text="..."
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

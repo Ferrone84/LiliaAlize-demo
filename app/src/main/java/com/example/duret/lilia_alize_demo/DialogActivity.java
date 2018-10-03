@@ -5,21 +5,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DialogActivity extends RecordActivity {
 
     private Thread thread;
     private SendMessage message = null;
+    private TextView dialogText;
+    private String recordResult, speakerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,29 @@ public class DialogActivity extends RecordActivity {
 
         Button reconnectButton = findViewById(R.id.reconnectButton);
         reconnectButton.setOnClickListener(reconnectButtonListener);
+
+        dialogText = findViewById(R.id.text);
+        toggleButton = findViewById(R.id.toggleButton);
+        speakerName = getIntent().getStringExtra("speakerName"); //null if not set
+
+        speech = SpeechRecognizer.createSpeechRecognizer(this);
+        speech.setRecognitionListener(this);
+        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    speech.startListening(recognizerIntent);
+                } else {
+                    speech.stopListening();
+                }
+            }
+        });
     }
 
     private View.OnClickListener startButtonListener = new View.OnClickListener() {
@@ -65,6 +96,17 @@ public class DialogActivity extends RecordActivity {
                 }
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onResults(Bundle results) {
+        super.onResults(results);
+        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        recordResult = matches != null ? matches.get(0) : null;
+
+        if (recordResult != null) {
+            dialogText.setText(recordResult);
         }
     }
 

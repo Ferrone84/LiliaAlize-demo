@@ -5,13 +5,13 @@
     <string name="start_button_value">Commençons</string>
     <string name="intro_description">Texte de description</string>
     <string name="hello_activity_name">Bonjour</string>
-    <string name="hello_description">Bonjour ! Vous allez bien ? :-)</string>
+    <string name="hello_description">Comment allez vous ? :-)</string>
     <string name="permission_error_message">Vous ne pouvez pas utiliser cette app sans cette permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Enregistrement effectué.</string>
     <string name="hello_message_start">Bonjour</string>
     <string name="hello_message_end">nous allons maintenant commencer notre discussion.</string>
-    <string name="new_speaker_text">Malheureusement nous n\'avons pas pu vous identifier. Veuillez le faire en saisissant votre nom ou en éditant un modèle déjà existant dans la liste.</string>
+    <string name="new_speaker_text">Nous n\'avons pas pu vous identifier. Veuillez le faire en saisissant votre nom ou en éditant un modèle déjà existant dans la liste.</string>
     <string name="speaker_name">Votre nom</string>
     <string name="add_speaker_button">Valider</string>
     <string name="addspeaker_activity_name">Nouvel utilisateur</string>

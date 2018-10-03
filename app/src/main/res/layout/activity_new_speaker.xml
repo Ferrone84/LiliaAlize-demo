@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Dummy item to prevent addSpeakerEditText from receiving focus -->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
     <TextView
         android:id="@+id/newSpeakerText"
         android:layout_width="match_parent"
@@ -34,6 +41,8 @@
         android:textSize="25sp"
         android:background="@drawable/border"
         android:gravity="center"
+        android:nextFocusUp="@id/addSpeakerEditText"
+        android:nextFocusLeft="@id/addSpeakerEditText"
         app:layout_constraintTop_toBottomOf="@+id/newSpeakerText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

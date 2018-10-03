@@ -13,6 +13,7 @@ import com.example.duret.lilia_alize_demo.speakerslist.Speaker;
 import com.example.duret.lilia_alize_demo.speakerslist.SpeakerListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import AlizeSpkRec.AlizeException;
 import AlizeSpkRec.IdAlreadyExistsException;
@@ -49,6 +50,12 @@ public class NewSpeakerActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        addSpeakerEditText.setText("");
+    }
+
     public void updateSpeakerOnClickHandler(View v) {
         try {
             Speaker speaker = (Speaker)v.getTag();
@@ -56,6 +63,8 @@ public class NewSpeakerActivity extends BaseActivity {
             alizeSystem.resetAudio();
             alizeSystem.resetFeatures();
             makeToast(getString(R.string.update_speakermodel)+" '"+speaker.getName()+"'.");
+            startDialog();
+
         } catch (AlizeException e) {
             e.printStackTrace();
         }
@@ -70,6 +79,10 @@ public class NewSpeakerActivity extends BaseActivity {
             }
             list.remove(itemToRemove);
             updateListViewContent();
+            if(!speakerAlreadyExist(speakerName)) {
+                addSpeakerButton.setEnabled(true);
+            }
+
         } catch (AlizeException e) {
             System.out.println(e.getMessage());
         }
@@ -117,12 +130,16 @@ public class NewSpeakerActivity extends BaseActivity {
                 clearAndFillSpeakersList();
                 updateListViewContent();
                 makeToast(getString(R.string.add_speakername_start)+" '"+speakerName+"' "+ getString(R.string.add_speakername_end));
+                startDialog();
 
             } catch (IdAlreadyExistsException e) {
                 e.printStackTrace();
                 makeToast(getString(R.string.speakerId_already_exists));
             } catch (AlizeException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+                makeToast(e.getMessage());
             }
         }
     };
@@ -163,5 +180,17 @@ public class NewSpeakerActivity extends BaseActivity {
             }
         }
         return false;
+    }
+
+    private void startDialog() {
+        say(
+        getResources().getString(R.string.hello_message_start) + " "
+                + speakerName + " "
+                + getResources().getString(R.string.hello_message_end)
+        );
+
+        startActivity(DialogActivity.class, new HashMap<String, Object>(){{
+            put("speakerName", speakerName);
+        }});
     }
 }

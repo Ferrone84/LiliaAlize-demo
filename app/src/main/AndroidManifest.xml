@@ -23,7 +23,7 @@
         <activity android:name=".BaseActivity" />
         <activity android:name=".HelloActivity" />
         <activity android:name=".RecordActivity" />
-        <activity android:name=".NewSpeakerActivity" />
+        <activity android:name=".NewSpeakerActivity" android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

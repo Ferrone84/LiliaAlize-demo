@@ -3,6 +3,8 @@ package com.example.duret.lilia_alize_demo;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.HashMap;
+
 import AlizeSpkRec.AlizeException;
 import AlizeSpkRec.SimpleSpkDetSystem;
 
@@ -34,31 +36,38 @@ public class HelloActivity extends RecordActivity {
     }
 
     @Override
-    protected void recordProcessing() {
+    public void onResume() {
         try {
-            long speakerCount = alizeSystem.speakerCount();
+            super.onResume();
+            timeText.setText(R.string.default_time);
+            alizeSystem.resetAudio();
+            alizeSystem.resetFeatures();
 
-            //add the speaker to the system
-            if (speakerCount == 0) {
-                startActivity(NewSpeakerActivity.class);
-                return;
-            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            makeToast(e.getMessage());
+        }
+    }
 
+    @Override
+    protected void afterRecordProcessing() {
+        try {
             //try to identify the speaker
-            SimpleSpkDetSystem.SpkRecResult identificationResult = alizeSystem.identifySpeaker();
-            System.out.println(identificationResult.match + "/" + identificationResult.score +"/"+identificationResult.speakerId);
+            final SimpleSpkDetSystem.SpkRecResult identificationResult = alizeSystem.identifySpeaker();
 
-            if (identificationResult.speakerId.equals("UBM")) {
+            if (identificationResult.speakerId.equals("UBM")) { //no speaker in the list
                 startActivity(NewSpeakerActivity.class);
             }
             else {
                 say(
-                    getResources().getString(R.string.hello_message_start)
-                    + identificationResult.speakerId
+                    getResources().getString(R.string.hello_message_start) + " "
+                    + identificationResult.speakerId + " "
                     + getResources().getString(R.string.hello_message_end)
                 );
-                startActivity(NewSpeakerActivity.class);
-                //TODO launch dialogActivity
+
+                startActivity(DialogActivity.class, new HashMap<String, Object>(){{
+                    put("speakerName", identificationResult.speakerId);
+                }});
             }
         } catch (AlizeException e) {
             e.printStackTrace();

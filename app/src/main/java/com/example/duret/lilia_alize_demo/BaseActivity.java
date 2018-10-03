@@ -3,6 +3,7 @@ package com.example.duret.lilia_alize_demo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -29,14 +30,11 @@ public class BaseActivity extends AppCompatActivity {
         try {
             simpleSpkDetSystemInit();
         }
-        catch (AlizeException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        catch (AlizeException | IOException e) {
             e.printStackTrace();
         }
 
-        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        textToSpeech = new TextToSpeech(BaseActivity.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
@@ -71,6 +69,11 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void say(CharSequence text) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+
+        //wait the tts to finish
+        /*while (textToSpeech.isSpeaking()) {
+            System.out.println(); //dummy content
+        }*/
     }
 
     protected void makeToast(String text) {
