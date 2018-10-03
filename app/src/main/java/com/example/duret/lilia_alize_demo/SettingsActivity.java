@@ -1,20 +1,31 @@
 package com.example.duret.lilia_alize_demo;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class SettingsActivity extends BaseActivity {
 
+    EditText editIp;
+    EditText editPort;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        EditText editIp = findViewById(R.id.editIP);
-        EditText editPort = findViewById(R.id.editPORT);
+        editIp = findViewById(R.id.editIP);
+        editPort = findViewById(R.id.editPORT);
+
+
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        editIp.setText(sharedPref.getString("editIP_key", ""));
+        editPort.setText(sharedPref.getString("editPORT_key", ""));
 
         editIp.addTextChangedListener( new TextWatcher() {
             @Override
@@ -22,7 +33,7 @@ public class SettingsActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Globals.getInstance().setIP(charSequence.toString());
+
             }
 
             @Override
@@ -37,7 +48,7 @@ public class SettingsActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Globals.getInstance().setPORT(charSequence.toString());
+
             }
 
             @Override
@@ -48,6 +59,15 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void end(View v) {
+
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Globals.getInstance().setIP(editIp.getText().toString());
+        sharedPref.edit().putString("editIP_key", editIp.getText().toString()).apply();
+
+        Globals.getInstance().setPORT(editPort.getText().toString());
+        sharedPref.edit().putString("editPORT_key", editPort.getText().toString()).apply();
+
         finish();
     }
 }
