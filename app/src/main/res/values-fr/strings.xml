@@ -22,4 +22,5 @@
     <string name="add_speakername_end">dans la liste.</string>
     <string name="update_speakermodel">Vous avez bien mit à jours le modèle de</string>
     <string name="speakerId_already_exists">Ce locuteur existe déjà.</string>
+    <string name="server_name">Serveur</string>
 </resources>

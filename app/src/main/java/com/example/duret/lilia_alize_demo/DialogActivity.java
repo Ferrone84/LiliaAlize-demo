@@ -1,12 +1,17 @@
 package com.example.duret.lilia_alize_demo;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +28,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import static android.icu.lang.UProperty.INT_START;
 
 public class DialogActivity extends RecordActivity {
 
@@ -51,6 +58,7 @@ public class DialogActivity extends RecordActivity {
         dialogText.setMovementMethod(new ScrollingMovementMethod());
         toggleButton = findViewById(R.id.toggleButton);
         speakerName = getIntent().getStringExtra("speakerName"); //null if not set
+        if (speakerName == null) speakerName = "Jean";
         image = findViewById(R.id.imgfruit);
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
@@ -165,12 +173,13 @@ public class DialogActivity extends RecordActivity {
                         dialogText.setText(text);
                     }
                     else {
-                        dialogText.setText(dialogText.getText() + "\n" + author + " - " + text);
+                        String boldText = "<b>" + author + " - </b>";
+                        dialogText.append(Html.fromHtml("<br>" + boldText + text));
                     }
 
                     final int scrollAmount = dialogText.getLayout()
                             .getLineTop(dialogText.getLineCount()) - dialogText.getHeight();
-                    // if there is no need to scroll, scrollAmount will be <=0
+
                     if (scrollAmount > 0)
                         dialogText.scrollTo(0, scrollAmount);
                     else
@@ -210,8 +219,8 @@ public class DialogActivity extends RecordActivity {
                         if(fromClient != null && fromClient.startsWith("t;"))
                         {
                             System.out.println("Receive: " + fromClient.substring(2));
-                            //setTextofView(fromClient.substring(2), R.id.dialogText);
-                            setDialogText(fromClient.substring(2), "Server");
+                            setDialogText(fromClient.substring(2), getString(R.string.server_name));
+                            Thread.sleep(1000);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -258,24 +267,20 @@ public class DialogActivity extends RecordActivity {
                     catch (Exception e)
                     {
                         e.printStackTrace();
-                        //makeToast(e.getMessage());
                     }
                 }
             }
             catch (java.net.UnknownHostException e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
             catch (java.io.IOException e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
         }
 
@@ -292,12 +297,10 @@ public class DialogActivity extends RecordActivity {
             catch (java.io.IOException e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
         }
 
@@ -309,17 +312,15 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("r;"+message);
-                setDialogText(message, "You");
+                setDialogText(message, speakerName);
             }
             catch (java.io.IOException e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
         }
 
@@ -337,12 +338,10 @@ public class DialogActivity extends RecordActivity {
             catch (java.io.IOException e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                //makeToast(e.getMessage());
             }
         }
     }
