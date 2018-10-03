@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class DialogActivity extends RecordActivity {
     private SendMessage message = null;
     private TextView dialogText;
     private String recordResult, speakerName;
+    private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,11 @@ public class DialogActivity extends RecordActivity {
         Button generateGoalButton = findViewById(R.id.generateGoalButton);
         generateGoalButton.setOnClickListener(generateGoalButtonListener);
 
-        dialogText = findViewById(R.id.text);
+        dialogText = findViewById(R.id.dialogText);
+        dialogText.setMovementMethod(new ScrollingMovementMethod());
         toggleButton = findViewById(R.id.toggleButton);
         speakerName = getIntent().getStringExtra("speakerName"); //null if not set
+        image = findViewById(R.id.imgfruit);
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
@@ -119,8 +123,18 @@ public class DialogActivity extends RecordActivity {
         recordResult = matches != null ? matches.get(0) : null;
 
         if (recordResult != null) {
-            dialogText.setText(recordResult);
+            if (recordResult.toLowerCase().equals("stop")) {
+                speech.stopListening();
+            }
+            else {
+                message.send(recordResult);
+            }
         }
+    }
+
+    @Override
+    protected void recordAudioSpeakToText() {
+        speech.startListening(recognizerIntent);
     }
 
     private class SendMessage implements Runnable {
@@ -139,6 +153,37 @@ public class DialogActivity extends RecordActivity {
                 public void run() {
                     TextView textView = findViewById(finalIdView);
                     textView.setText(finalText);
+                }
+            });
+        }
+
+        private void setDialogText(final String text, final String author) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (author.isEmpty()) {
+                        dialogText.setText(text);
+                    }
+                    else {
+                        dialogText.setText(dialogText.getText() + "\n" + author + " - " + text);
+                    }
+
+                    final int scrollAmount = dialogText.getLayout()
+                            .getLineTop(dialogText.getLineCount()) - dialogText.getHeight();
+                    // if there is no need to scroll, scrollAmount will be <=0
+                    if (scrollAmount > 0)
+                        dialogText.scrollTo(0, scrollAmount);
+                    else
+                        dialogText.scrollTo(0, 0);
+                }
+            });
+        }
+
+        private void setFruitImage(final int fruitId) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    image.setImageResource(fruitId);
                 }
             });
         }
@@ -165,8 +210,14 @@ public class DialogActivity extends RecordActivity {
                         if(fromClient != null && fromClient.startsWith("t;"))
                         {
                             System.out.println("Receive: " + fromClient.substring(2));
-                            setTextofView(fromClient.substring(2), R.id.text);
-                            recordAudioSpeakToText();
+                            //setTextofView(fromClient.substring(2), R.id.dialogText);
+                            setDialogText(fromClient.substring(2), "Server");
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recordAudioSpeakToText();
+                                }
+                            });
                         }
                         else if(fromClient != null && fromClient.startsWith("f;"))
                         {
@@ -176,61 +227,54 @@ public class DialogActivity extends RecordActivity {
 
                             if(str_fruit.equals("fraise"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.fraise);
+                                setFruitImage(R.drawable.fraise);
                             }
                             else if(str_fruit.equals("citron"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.citron);
+                                setFruitImage(R.drawable.citron);
                             }
                             else if(str_fruit.equals("poire"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.poire);
+                                setFruitImage(R.drawable.poire);
                             }
                             else if(str_fruit.equals("pomme"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.pomme);
+                                setFruitImage(R.drawable.pomme);
                             }
                             else if(str_fruit.equals("framboise"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.framboise);
+                                setFruitImage(R.drawable.framboise);
                             }
                             else if(str_fruit.equals("aubergine"))
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(R.drawable.aubergine);
+                                setFruitImage(R.drawable.aubergine);
                             }
                             else
                             {
-                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
-                                image.setImageResource(android.R.color.transparent);
+                                setFruitImage(android.R.color.transparent);
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        System.err.println(e.getStackTrace());
+                        e.printStackTrace();
                         //makeToast(e.getMessage());
                     }
                 }
             }
             catch (java.net.UnknownHostException e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
         }
@@ -247,12 +291,12 @@ public class DialogActivity extends RecordActivity {
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
         }
@@ -265,15 +309,16 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("r;"+message);
+                setDialogText(message, "You");
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
         }
@@ -287,15 +332,16 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("goal");
+                setDialogText("...", "");
             }
             catch (java.io.IOException e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
             catch (Exception e)
             {
-                System.err.println(e.getStackTrace());
+                e.printStackTrace();
                 //makeToast(e.getMessage());
             }
         }

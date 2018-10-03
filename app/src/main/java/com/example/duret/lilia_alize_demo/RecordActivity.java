@@ -249,7 +249,6 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
             speech.destroy();
             Log.i(LOG_TAG, "destroy");
         }
-
     }
 
     @Override
@@ -272,6 +271,8 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);
         Log.d(LOG_TAG, "FAILED " + errorMessage);
+        if (errorMessage.equals("No speech input"))
+            makeToast(errorMessage);
         toggleButton.setChecked(false);
     }
 
