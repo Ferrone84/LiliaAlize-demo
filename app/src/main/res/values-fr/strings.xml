@@ -5,7 +5,7 @@
     <string name="start_button_value">Commençons</string>
     <string name="intro_description">Texte de description</string>
     <string name="hello_activity_name">Bonjour</string>
-    <string name="hello_description">Comment allez vous ? :-)</string>
+    <string name="hello_description">Veuillez vous présenter.</string>
     <string name="permission_error_message">Vous ne pouvez pas utiliser cette app sans cette permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Enregistrement effectué.</string>
@@ -24,4 +24,5 @@
     <string name="speakerId_already_exists">Ce locuteur existe déjà.</string>
     <string name="server_name">Serveur</string>
     <string name="no_speech_input">Aucune parole détectée</string>
+    <string name="no_sound_detected_recoloc">Aucune parole détectée, réessayez.</string>
 </resources>
