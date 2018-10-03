@@ -114,7 +114,6 @@ public class DialogActivity extends RecordActivity {
     private View.OnClickListener restartListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
     };
