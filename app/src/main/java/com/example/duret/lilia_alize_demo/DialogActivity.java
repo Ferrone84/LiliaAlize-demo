@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -40,6 +41,9 @@ public class DialogActivity extends RecordActivity {
 
         Button reconnectButton = findViewById(R.id.reconnectButton);
         reconnectButton.setOnClickListener(reconnectButtonListener);
+
+        Button generateGoalButton = findViewById(R.id.generateGoalButton);
+        generateGoalButton.setOnClickListener(generateGoalButtonListener);
 
         dialogText = findViewById(R.id.text);
         toggleButton = findViewById(R.id.toggleButton);
@@ -80,6 +84,15 @@ public class DialogActivity extends RecordActivity {
             message = new SendMessage();
             thread = new Thread(message);
             thread.start();
+        }
+    };
+
+    private View.OnClickListener generateGoalButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (message != null) {
+                message.generateGoal();
+            }
         }
     };
 
@@ -157,8 +170,45 @@ public class DialogActivity extends RecordActivity {
                         }
                         else if(fromClient != null && fromClient.startsWith("f;"))
                         {
-                            System.out.println("Receive fruit: " + fromClient.substring(2));
-                            setTextofView(fromClient.substring(2), R.id.fruit);
+                            String str_fruit = fromClient.substring(2);
+                            System.out.println("Receive fruit: " + str_fruit);
+                            setTextofView(str_fruit, R.id.fruit);
+
+                            if(str_fruit.equals("fraise"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.fraise);
+                            }
+                            else if(str_fruit.equals("citron"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.citron);
+                            }
+                            else if(str_fruit.equals("poire"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.poire);
+                            }
+                            else if(str_fruit.equals("pomme"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.pomme);
+                            }
+                            else if(str_fruit.equals("framboise"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.framboise);
+                            }
+                            else if(str_fruit.equals("aubergine"))
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(R.drawable.aubergine);
+                            }
+                            else
+                            {
+                                ImageView image = (ImageView) findViewById(R.id.imgfruit);
+                                image.setImageResource(android.R.color.transparent);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -215,6 +265,28 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("r;"+message);
+            }
+            catch (java.io.IOException e)
+            {
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
+            }
+            catch (Exception e)
+            {
+                System.err.println(e.getStackTrace());
+                //makeToast(e.getMessage());
+            }
+        }
+
+        protected void generateGoal()
+        {
+            System.out.println("GenerateGoal");
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            try
+            {
+                PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+                out.println("goal");
             }
             catch (java.io.IOException e)
             {
