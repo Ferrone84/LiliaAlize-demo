@@ -243,7 +243,6 @@ public class DialogActivity extends RecordActivity {
                         {
                             String str_fruit = fromClient.substring(2);
                             System.out.println("Receive fruit: " + str_fruit);
-                            setTextofView(str_fruit, R.id.fruit);
 
                             if(str_fruit.equals("fraise"))
                             {
