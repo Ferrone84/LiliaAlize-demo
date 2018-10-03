@@ -220,6 +220,7 @@ public class DialogActivity extends RecordActivity {
                         {
                             System.out.println("Receive: " + fromClient.substring(2));
                             setDialogText(fromClient.substring(2), getString(R.string.server_name));
+                            say(fromClient.substring(2), true);
                             Thread.sleep(1000);
                             handler.post(new Runnable() {
                                 @Override

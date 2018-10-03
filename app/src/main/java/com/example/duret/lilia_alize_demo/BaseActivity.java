@@ -16,7 +16,7 @@ import java.util.Map;
 import AlizeSpkRec.AlizeException;
 import AlizeSpkRec.SimpleSpkDetSystem;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     protected Locale defaultLanguage;
     protected TextToSpeech textToSpeech;
@@ -34,14 +34,7 @@ public class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        textToSpeech = new TextToSpeech(BaseActivity.this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(defaultLanguage);
-                }
-            }
-        });
+        textToSpeech = new TextToSpeech(BaseActivity.this,this);
     }
 
     @Override
@@ -68,12 +61,21 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void say(CharSequence text) {
+        say(text, false);
+
+    }
+
+    protected void say(CharSequence text, boolean synchronous) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
 
         //wait the tts to finish
-        /*while (textToSpeech.isSpeaking()) {
-            System.out.println(); //dummy content
-        }*/
+        if(synchronous)
+        {
+            while (textToSpeech.isSpeaking()) {
+                //System.out.println(); //dummy content
+            }
+        }
+
     }
 
     protected void makeToast(String text) {
@@ -100,4 +102,8 @@ public class BaseActivity extends AppCompatActivity {
         backgroundModelAsset.close();
     }
 
+    @Override
+    public void onInit(int i) {
+        System.out.println("[BaseActivity] TTS started");
+    }
 }
