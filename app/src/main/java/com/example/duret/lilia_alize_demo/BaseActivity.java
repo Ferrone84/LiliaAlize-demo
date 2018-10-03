@@ -42,6 +42,8 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
+
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA "+Globals.getInstance().getIP()+" "+Globals.getInstance().getPORT());
     }
 
     @Override

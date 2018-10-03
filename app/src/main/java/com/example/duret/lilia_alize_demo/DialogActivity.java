@@ -150,8 +150,8 @@ public class DialogActivity extends RecordActivity {
 
             try
             {
-                String ip = ((EditText)findViewById(R.id.editIP)).getText().toString();
-                int port = Integer.parseInt(((EditText)findViewById(R.id.editPORT)).getText().toString());
+                String ip = Globals.getInstance().getIP();
+                int port = Integer.parseInt(Globals.getInstance().getPORT());
                 sock = new Socket(ip, port); //TODO: menu connection with text input for host and port
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);

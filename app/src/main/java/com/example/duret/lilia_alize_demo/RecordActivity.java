@@ -243,7 +243,7 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         if (speech != null) {
             speech.destroy();

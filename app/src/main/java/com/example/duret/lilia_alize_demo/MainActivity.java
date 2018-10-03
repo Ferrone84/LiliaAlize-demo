@@ -3,6 +3,7 @@ package com.example.duret.lilia_alize_demo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends BaseActivity {
 
@@ -19,6 +20,14 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 startActivity(DialogActivity.class);
+            }
+        });
+
+        ImageButton settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(SettingsActivity.class);
             }
         });
     }

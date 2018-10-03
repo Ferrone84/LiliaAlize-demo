@@ -42,6 +42,8 @@ public class NewSpeakerActivity extends BaseActivity {
         addSpeakerEditText.addTextChangedListener(addSpeakerEditTextListener);
         addSpeakerButton.setOnClickListener(addSpeakerButtonListener);
 
+        say(getResources().getString(R.string.new_speaker_text));
+
         try {
             clearAndFillSpeakersList();
             updateListViewContent();
