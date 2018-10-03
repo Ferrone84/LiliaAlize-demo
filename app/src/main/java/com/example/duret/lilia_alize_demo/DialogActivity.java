@@ -54,6 +54,9 @@ public class DialogActivity extends RecordActivity {
         Button generateGoalButton = findViewById(R.id.generateGoalButton);
         generateGoalButton.setOnClickListener(generateGoalButtonListener);
 
+        Button restartButton = findViewById(R.id.restart);
+        restartButton.setOnClickListener(restartListener);
+
         dialogText = findViewById(R.id.dialogText);
         dialogText.setMovementMethod(new ScrollingMovementMethod());
         toggleButton = findViewById(R.id.toggleButton);
@@ -105,6 +108,14 @@ public class DialogActivity extends RecordActivity {
             if (message != null) {
                 message.generateGoal();
             }
+        }
+    };
+
+    private View.OnClickListener restartListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
     };
 
@@ -221,7 +232,7 @@ public class DialogActivity extends RecordActivity {
                             System.out.println("Receive: " + fromClient.substring(2));
                             setDialogText(fromClient.substring(2), getString(R.string.server_name));
                             say(fromClient.substring(2), true);
-                            Thread.sleep(1000);
+                            Thread.sleep(100);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
