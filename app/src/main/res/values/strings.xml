@@ -10,7 +10,7 @@
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Recording Completed</string>
     <string name="hello_message_start">Hello</string>
-    <string name="hello_message_end">, I am Lilia. We are now going to start our dialog.</string>
+    <string name="hello_message_end">, I am Lilia. We are now going to start our dialog. We must describe this image and then try to determine its message.</string>
     <string name="new_speaker_text">We couldn\'t identity you. Please do it bellow by setting your name or by editing an existing speaker model in the list.</string>
     <string name="speaker_name">Speaker name</string>
     <string name="add_speaker_button">Apply</string>
