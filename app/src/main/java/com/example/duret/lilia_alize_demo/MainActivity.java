@@ -18,6 +18,8 @@ public class MainActivity extends BaseActivity {
 
         Button startButton = findViewById(R.id.startButton);
         startButton.setOnClickListener(startButtonListener);
+        Button skipIdentificationButton = findViewById(R.id.skip_identification_button);
+        skipIdentificationButton.setOnClickListener(skipIdentificationListener);
 
 
         ImageButton settingsButton = findViewById(R.id.settingsButton);
@@ -55,6 +57,13 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             startActivity(HelloActivity.class);
+        }
+    };
+
+    private View.OnClickListener skipIdentificationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(DialogActivity.class);
         }
     };
 }

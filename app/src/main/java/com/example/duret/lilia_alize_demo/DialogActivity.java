@@ -173,7 +173,8 @@ public class DialogActivity extends RecordActivity {
 
         if (recordResult != null) {
             if (recordResult.toLowerCase().equals("stop")) {
-                speech.stopListening();
+                toggleButton.setChecked(false);
+                //speech.stopListening();
             }
             else {
                 message.send(recordResult);
@@ -312,7 +313,8 @@ public class DialogActivity extends RecordActivity {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    recordAudioSpeakToText();
+                                    toggleButton.setChecked(true);
+                                    //recordAudioSpeakToText();
                                 }
                             });
                         }

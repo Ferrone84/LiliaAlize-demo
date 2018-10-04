@@ -280,7 +280,7 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);
         Log.d(LOG_TAG, "FAILED " + errorMessage);
-        if (errorMessage.equals("No speech input")) {
+        if (errorMessage.equals("No speech input") || errorMessage.equals("No match")) {
             makeToast(getResources().getString(R.string.no_speech_input));
         }
         toggleButton.setChecked(false);

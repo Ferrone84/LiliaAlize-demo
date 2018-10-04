@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Lilia-Alize demo</string>
-    <string name="dialog_activity_name">DialogActivity</string>
+    <string name="dialog_activity_name">Dialog</string>
     <string name="record_content_desc">Start the record</string>
-    <string name="start_button_value">Let\'s get started</string>
+    <string name="start_button_value">Identify</string>
     <string name="intro_description">DescText</string>
     <string name="hello_activity_name">HelloActivity</string>
     <string name="hello_description">How are you today? :-)</string>
@@ -25,4 +25,8 @@
     <string name="server_name">Server</string>
     <string name="no_speech_input">No speech input</string>
     <string name="no_sound_detected_recoloc">No sound detected, try again.</string>
+    <string name="start_activity_name">Dialog</string>
+    <string name="skip_identification">Start dialog</string>
+    <string name="button_start_recording">Push to speak</string>
+    <string name="button_stop_recording">Recording</string>
 </resources>
