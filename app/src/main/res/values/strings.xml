@@ -24,4 +24,5 @@
     <string name="speakerId_already_exists">This speaker already exists.</string>
     <string name="server_name">Server</string>
     <string name="no_speech_input">No speech input</string>
+    <string name="no_sound_detected_recoloc">No sound detected, try again.</string>
 </resources>

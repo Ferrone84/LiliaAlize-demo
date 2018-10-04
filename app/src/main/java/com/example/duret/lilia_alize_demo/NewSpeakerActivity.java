@@ -42,14 +42,17 @@ public class NewSpeakerActivity extends BaseActivity {
         addSpeakerEditText.addTextChangedListener(addSpeakerEditTextListener);
         addSpeakerButton.setOnClickListener(addSpeakerButtonListener);
 
-        say(getResources().getString(R.string.new_speaker_text));
-
         try {
             clearAndFillSpeakersList();
             updateListViewContent();
         } catch (AlizeException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onInit(int i) {
+        say(getResources().getString(R.string.new_speaker_text));
     }
 
     @Override

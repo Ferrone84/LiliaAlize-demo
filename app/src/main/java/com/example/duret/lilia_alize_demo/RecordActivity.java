@@ -171,39 +171,48 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
             @Override
             public void run() {
                 short[] nextElement;
-                while((recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
-                        || (!audioPackets.isEmpty())) {
-                    nextElement = null;
-                    synchronized (audioPackets) {
-                        if (!audioPackets.isEmpty()) {
-                            nextElement = audioPackets.get(0);
-                            audioPackets.remove(0);
-                        }
-                    }
-                    if (nextElement != null) {
-                        try {
-                            alizeSystem.addAudio(nextElement);
-                        } catch (AlizeException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
                 try {
-                    recordingThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                while (!audioPackets.isEmpty()) {
-                    nextElement = audioPackets.get(0);
-                    audioPackets.remove(0);
-                    if (nextElement != null) {
-                        try {
-                            alizeSystem.addAudio(nextElement);
-                        } catch (AlizeException e) {
-                            e.printStackTrace();
+                    while ((recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
+                            || (!audioPackets.isEmpty())) {
+                        nextElement = null;
+                        synchronized (audioPackets) {
+                            if (!audioPackets.isEmpty()) {
+                                nextElement = audioPackets.get(0);
+                                audioPackets.remove(0);
+                            }
+                        }
+                        if (nextElement != null) {
+                            try {
+                                alizeSystem.addAudio(nextElement);
+                            } catch (AlizeException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
+
+                    try {
+                        recordingThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    while (!audioPackets.isEmpty()) {
+                        nextElement = audioPackets.get(0);
+                        audioPackets.remove(0);
+                        if (nextElement != null) {
+                            try {
+                                alizeSystem.addAudio(nextElement);
+                            } catch (AlizeException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Throwable e) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            makeToast(getResources().getString(R.string.no_sound_detected_recoloc));
+                        }
+                    });
                 }
             }
         }, "addSamples Thread");
