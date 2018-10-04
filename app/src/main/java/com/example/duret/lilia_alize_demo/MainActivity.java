@@ -19,13 +19,6 @@ public class MainActivity extends BaseActivity {
         Button startButton = findViewById(R.id.startButton);
         startButton.setOnClickListener(startButtonListener);
 
-        Button dialogButton = findViewById(R.id.dialogButton);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(DialogActivity.class);
-            }
-        });
 
         ImageButton settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(new View.OnClickListener() {
