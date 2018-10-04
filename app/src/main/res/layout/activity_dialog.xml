@@ -5,18 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
-        android:text="Commencer"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toStartOf="@+id/toggleButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
         android:id="@+id/toggleButton"
@@ -25,23 +13,11 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toStartOf="@+id/reconnectButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/startButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/reconnectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="15dp"
-        android:text="Reconnecter"
-        android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/generateGoalButton"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/toggleButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/generateGoalButton"
@@ -53,7 +29,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/restart"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/reconnectButton"
+        app:layout_constraintStart_toEndOf="@+id/toggleButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button

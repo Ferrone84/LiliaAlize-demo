@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -45,11 +46,6 @@ public class DialogActivity extends RecordActivity {
         setContentView(R.layout.activity_dialog);
         setTitle(R.string.dialog_activity_name);
 
-        Button startButton = findViewById(R.id.startButton);
-        startButton.setOnClickListener(startButtonListener);
-
-        Button reconnectButton = findViewById(R.id.reconnectButton);
-        reconnectButton.setOnClickListener(reconnectButtonListener);
 
         Button generateGoalButton = findViewById(R.id.generateGoalButton);
         generateGoalButton.setOnClickListener(generateGoalButtonListener);
@@ -84,29 +80,26 @@ public class DialogActivity extends RecordActivity {
         });
     }
 
-    private View.OnClickListener startButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (message != null) {
-                message.start();
-            }
-        }
-    };
+    @Override
+    public void onInit(int i) {
+        connect();
+    }
 
-    private View.OnClickListener reconnectButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            message = new SendMessage();
-            thread = new Thread(message);
-            thread.start();
-        }
-    };
 
     private View.OnClickListener generateGoalButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (message != null) {
-                message.generateGoal();
+                if(message.isStarted())
+                {
+                    message.stop();
+                    message.start();
+                }
+                else
+                {
+                    message.generateGoal();
+                }
+
             }
         }
     };
@@ -155,11 +148,44 @@ public class DialogActivity extends RecordActivity {
         speech.startListening(recognizerIntent);
     }
 
+    protected void connect()
+    {
+        if(message != null)
+        {
+            message.close();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            thread = new Thread(message);
+            thread.start();
+        }
+        else
+        {
+            message = new SendMessage();
+            thread = new Thread(message);
+            thread.start();
+        }
+    }
+
     private class SendMessage implements Runnable {
 
         private Socket sock;
         private BufferedReader in;
         private Handler handler = new Handler();
+
+        private boolean started = false;
+
+        private void close()
+        {
+            try {
+                sock.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         private void setTextofView(String text, int idView)
         {
@@ -220,12 +246,17 @@ public class DialogActivity extends RecordActivity {
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 
+                setLocuteur(speakerName);
+                start();
+
                 String fromClient;
-                while(true)
+
+                while(!sock.isClosed())
                 {
                     try
                     {
                         fromClient = in.readLine();
+                        System.out.println("DEBUG  >>  " + fromClient);
                         if(fromClient != null && fromClient.startsWith("t;"))
                         {
                             System.out.println("Receive: " + fromClient.substring(2));
@@ -294,6 +325,12 @@ public class DialogActivity extends RecordActivity {
             }
         }
 
+        public boolean isStarted()
+        {
+            return started;
+        }
+
+
         protected void start()
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -301,8 +338,52 @@ public class DialogActivity extends RecordActivity {
 
             try
             {
+
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("start");
+                started = true;
+            }
+            catch (java.io.IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        protected void stop()
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            try
+            {
+                PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+                out.println("stop");
+                setDialogText("...", "");
+                started = false;
+            }
+            catch (java.io.IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        protected void setLocuteur(String locuteur)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            try
+            {
+                PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+                out.println("l;"+locuteur);
             }
             catch (java.io.IOException e)
             {
