@@ -13,6 +13,7 @@ import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -85,6 +86,31 @@ public class DialogActivity extends RecordActivity {
         connect();
     }
 
+    /*@Override
+    public void onBackPressed() {
+        makeToast("BackPressed");
+        message.close();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }*/
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            message.close();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private View.OnClickListener generateGoalButtonListener = new View.OnClickListener() {
         @Override
@@ -107,6 +133,12 @@ public class DialogActivity extends RecordActivity {
     private View.OnClickListener restartListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            message.close();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
     };
