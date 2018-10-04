@@ -5,6 +5,7 @@ public class Globals {
 
     // Global variable
     private String ip, port;
+    private boolean humour;
 
     // Restrict the constructor from being instantiated
     private Globals(){}
@@ -21,6 +22,13 @@ public class Globals {
     }
     public String getPORT(){
         return this.port;
+    }
+
+    public void setHUMOUR(boolean humour){
+        this.humour = humour;
+    }
+    public boolean getHUMOUR(){
+        return this.humour;
     }
 
     public static synchronized Globals getInstance(){

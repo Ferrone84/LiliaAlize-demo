@@ -284,11 +284,15 @@ public class DialogActivity extends RecordActivity {
             {
                 String ip = Globals.getInstance().getIP();
                 int port = Integer.parseInt(Globals.getInstance().getPORT());
+                boolean humour = Globals.getInstance().getHUMOUR();
                 sock = new Socket(ip, port); //TODO: menu connection with text input for host and port
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 
                 setLocuteur(speakerName);
+                Thread.sleep(100);
+                setHumour(humour);
+                Thread.sleep(100);
                 start();
 
                 String fromClient;
@@ -431,6 +435,32 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("l;"+locuteur);
+            }
+            catch (java.io.IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        protected void setHumour(boolean humour)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            try
+            {
+                PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+                if(humour) {
+                    out.println("h;true");
+                }
+                else
+                {
+                    out.println("h;false");
+                }
             }
             catch (java.io.IOException e)
             {

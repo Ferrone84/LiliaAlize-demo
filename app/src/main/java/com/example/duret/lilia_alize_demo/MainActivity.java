@@ -32,6 +32,7 @@ public class MainActivity extends BaseActivity {
             final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             Globals.getInstance().setIP(sharedPref.getString("editIP_key", ""));
             Globals.getInstance().setPORT(sharedPref.getString("editPORT_key", ""));
+            Globals.getInstance().setHUMOUR(sharedPref.getBoolean("switchHumour_key", true));
         }
 
     }
