@@ -413,7 +413,7 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("stop");
-                setDialogText("...", "");
+                setDialogText("", "");
                 started = false;
             }
             catch (java.io.IOException e)
@@ -501,7 +501,7 @@ public class DialogActivity extends RecordActivity {
             {
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
                 out.println("goal");
-                setDialogText("...", "");
+                setDialogText("", "");
             }
             catch (java.io.IOException e)
             {

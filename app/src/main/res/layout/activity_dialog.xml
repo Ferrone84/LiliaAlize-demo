@@ -81,7 +81,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:scrollbars="vertical"
-            android:text="..."
+            android:text=""
             android:textColor="@color/black"
             android:textSize="15sp" />
     </LinearLayout>
