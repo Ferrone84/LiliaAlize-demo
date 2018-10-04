@@ -101,6 +101,7 @@ public class DialogActivity extends RecordActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            message.stop();
             message.close();
             try {
                 thread.join();
@@ -133,6 +134,7 @@ public class DialogActivity extends RecordActivity {
     private View.OnClickListener restartListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            message.stop();
             message.close();
             try {
                 thread.join();
@@ -301,6 +303,11 @@ public class DialogActivity extends RecordActivity {
                                     recordAudioSpeakToText();
                                 }
                             });
+                        }
+                        else if(fromClient != null && fromClient.startsWith("hangup"))
+                        {
+                            System.out.println("Receive: " + fromClient.substring(2));
+                            setDialogText("", getString(R.string.server_name) + " Terminé");
                         }
                         else if(fromClient != null && fromClient.startsWith("f;"))
                         {
