@@ -63,6 +63,11 @@ public class MainActivity extends BaseActivity {
     private View.OnClickListener skipIdentificationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            say(
+                    getResources().getString(R.string.hello_message_start) + " "
+                            + "Fabrice" + " "
+                            + getResources().getString(R.string.hello_message_end)
+            );
             startActivity(DialogActivity.class);
         }
     };

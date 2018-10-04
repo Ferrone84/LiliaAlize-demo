@@ -58,7 +58,7 @@ public class DialogActivity extends RecordActivity {
         dialogText.setMovementMethod(new ScrollingMovementMethod());
         toggleButton = findViewById(R.id.toggleButton);
         speakerName = getIntent().getStringExtra("speakerName"); //null if not set
-        if (speakerName == null) speakerName = "Jean";
+        if (speakerName == null) speakerName = "Fabrice";
         image = findViewById(R.id.imgfruit);
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
