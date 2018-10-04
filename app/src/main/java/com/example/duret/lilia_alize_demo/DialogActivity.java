@@ -101,12 +101,14 @@ public class DialogActivity extends RecordActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            message.stop();
-            message.close();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(message != null) {
+                message.stop();
+                message.close();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
@@ -134,12 +136,14 @@ public class DialogActivity extends RecordActivity {
     private View.OnClickListener restartListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            message.stop();
-            message.close();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(message != null) {
+                message.stop();
+                message.close();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
@@ -217,6 +221,10 @@ public class DialogActivity extends RecordActivity {
             try {
                 sock.close();
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
