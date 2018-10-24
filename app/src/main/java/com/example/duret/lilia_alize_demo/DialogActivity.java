@@ -252,7 +252,7 @@ public class DialogActivity extends RecordActivity {
                         dialogText.setText(text);
                     }
                     else {
-                        String boldText = "<b>" + author + " - </b>";
+                        String boldText = "<b>" + author + "</b><br>";
                         dialogText.append(Html.fromHtml("<br>" + boldText + text));
                     }
 
