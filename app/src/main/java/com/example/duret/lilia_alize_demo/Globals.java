@@ -4,7 +4,8 @@ public class Globals {
     private static Globals instance;
 
     // Global variable
-    private String ip, port;
+    private String ip = "demo-lia.univ-avignon.fr";
+    private String port = "13558";
     private boolean humour;
 
     // Restrict the constructor from being instantiated

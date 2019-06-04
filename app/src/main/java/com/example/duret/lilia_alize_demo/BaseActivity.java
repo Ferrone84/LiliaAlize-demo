@@ -1,11 +1,16 @@
 package com.example.duret.lilia_alize_demo;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -15,6 +20,8 @@ import java.util.Map;
 
 import AlizeSpkRec.AlizeException;
 import AlizeSpkRec.SimpleSpkDetSystem;
+
+import static android.Manifest.permission.RECORD_AUDIO;
 
 public class BaseActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -34,7 +41,50 @@ public class BaseActivity extends AppCompatActivity implements TextToSpeech.OnIn
             e.printStackTrace();
         }
 
-        textToSpeech = new TextToSpeech(BaseActivity.this,this);
+        try {
+            textToSpeech = new TextToSpeech(BaseActivity.this,this);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(getApplicationContext(),
+                RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    protected void requestPermission() {
+        ActivityCompat.requestPermissions(BaseActivity.this, new
+                String[]{RECORD_AUDIO}, 42);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (requestCode == 42) {
+            if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                requestPermission();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            startActivity(SettingsActivity.class);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -62,7 +112,6 @@ public class BaseActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     protected void say(CharSequence text) {
         say(text, false);
-
     }
 
     protected void say(CharSequence text, boolean synchronous) {

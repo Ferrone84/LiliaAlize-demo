@@ -1,10 +1,13 @@
 package com.example.duret.lilia_alize_demo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.Html;
@@ -40,13 +43,13 @@ public class DialogActivity extends RecordActivity {
     private TextView dialogText;
     private String recordResult, speakerName;
     private ImageView image;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
         setTitle(R.string.dialog_activity_name);
-
 
         Button generateGoalButton = findViewById(R.id.generateGoalButton);
         generateGoalButton.setOnClickListener(generateGoalButtonListener);
@@ -58,7 +61,7 @@ public class DialogActivity extends RecordActivity {
         dialogText.setMovementMethod(new ScrollingMovementMethod());
         toggleButton = findViewById(R.id.toggleButton);
         speakerName = getIntent().getStringExtra("speakerName"); //null if not set
-        if (speakerName == null) speakerName = "Fabrice";
+        if (speakerName == null) { speakerName = "Fabrice"; }
         image = findViewById(R.id.imgfruit);
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
@@ -85,18 +88,6 @@ public class DialogActivity extends RecordActivity {
     public void onInit(int i) {
         connect();
     }
-
-    /*@Override
-    public void onBackPressed() {
-        makeToast("BackPressed");
-        message.close();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        startActivity(new Intent(DialogActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -128,7 +119,6 @@ public class DialogActivity extends RecordActivity {
                 {
                     message.generateGoal();
                 }
-
             }
         }
     };
@@ -203,6 +193,7 @@ public class DialogActivity extends RecordActivity {
         }
         else
         {
+            context = DialogActivity.this;
             message = new SendMessage();
             thread = new Thread(message);
             thread.start();
@@ -283,10 +274,11 @@ public class DialogActivity extends RecordActivity {
 
             try
             {
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
                 String ip = Globals.getInstance().getIP();
                 int port = Integer.parseInt(Globals.getInstance().getPORT());
                 boolean humour = Globals.getInstance().getHUMOUR();
-                sock = new Socket(ip, port); //TODO: menu connection with text input for host and port
+                sock = new Socket(ip, port);
                 in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 
@@ -364,8 +356,14 @@ public class DialogActivity extends RecordActivity {
                     }
                 }
             }
-            catch (java.net.UnknownHostException e)
+            catch (java.net.UnknownHostException | java.net.ConnectException e)
             {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialogText.setText("Error: "+e.getMessage());
+                    }
+                });
                 e.printStackTrace();
             }
             catch (java.io.IOException e)

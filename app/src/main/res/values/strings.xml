@@ -3,12 +3,13 @@
     <string name="dialog_activity_name">Dialog</string>
     <string name="record_content_desc">Start the record</string>
     <string name="start_button_value">Identify</string>
-    <string name="intro_description">DescText</string>
+    <string name="intro_description">This application is introduced by the Laboratoire Informatique d\'Avignon. Its purpose is to join a speaker recognition system and a dialog system both created by the L.I.A.</string>
     <string name="hello_activity_name">HelloActivity</string>
     <string name="hello_description">How are you today? :-)</string>
     <string name="permission_error_message">You cannot use this app without this permission.</string>
     <string name="default_time">00:00:00</string>
     <string name="recording_completed">Recording Completed</string>
+    <string name="recording_not_completed">There was an error with the record, please try again.</string>
     <string name="hello_message_start">Hello</string>
     <string name="hello_message_end">, I am Lilia. We are now going to start our dialog. We must describe this image and then try to determine its message.</string>
     <string name="new_speaker_text">We couldn\'t identity you. Please do it bellow by setting your name or by editing an existing speaker model in the list.</string>
@@ -29,4 +30,10 @@
     <string name="skip_identification">Start dialog</string>
     <string name="button_start_recording">Push to speak</string>
     <string name="button_stop_recording">Recording</string>
+    <string name="settings_title">Settings</string>
+    <string name="mainpage_or_text">or</string>
+    <string name="humor">Humor</string>
+    <string name="apply_button">Apply</string>
+    <string name="fruit_suivant">Next fruit</string>
+    <string name="back_start">Home</string>
 </resources>

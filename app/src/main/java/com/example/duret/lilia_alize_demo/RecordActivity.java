@@ -39,11 +39,13 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
     protected int bytesPerElement = 2; // 2 bytes in 16bit format
 
     protected long startTime;
-    private boolean recordExists = false;
+    protected TextView timeText;
+    protected boolean emptyRecord = false;
+    protected boolean recordExists = false;
+    protected boolean recordError = false;
     protected AudioRecord recorder = null;
     protected Button startRecordButton, stopRecordButton;
-    protected Thread recordingThread = null, addSamplesThread = null;
-    protected TextView timeText;
+    protected Thread recordingThread = null, addSamplesThread = null, timerThread = null;
 
     protected ToggleButton toggleButton;
     protected SpeechRecognizer speech = null;
@@ -53,16 +55,6 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    protected boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(getApplicationContext(),
-                RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    protected void requestPermission() {
-        ActivityCompat.requestPermissions(RecordActivity.this, new
-                String[]{RECORD_AUDIO}, 42);
     }
 
     @Override
@@ -107,16 +99,22 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
         }
     }
 
+    /**
+     * Method that start the record of the android microphone and use Alize features.
+     */
     protected void startRecording() {
         if (!checkPermission()) {
             requestPermission();
             return;
         }
 
+        emptyRecord = true;
+        recordError = false;
         startRecordButton.setVisibility(View.INVISIBLE);
         stopRecordButton.setVisibility(View.VISIBLE);
         timeText.setText(R.string.default_time);
 
+        //Start the record
         recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, bufferElements2Rec * bytesPerElement);
@@ -124,8 +122,9 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
 
         if (recordExists) {
             try {
-                alizeSystem.resetAudio();
-                alizeSystem.resetFeatures();
+                //Reset input, since we will not make any more use of this audio signal.
+                alizeSystem.resetAudio();       //Reset the audio samples of the Alize system.
+                alizeSystem.resetFeatures();    //Reset the features of the Alize system.
             } catch (AlizeException e) {
                 e.printStackTrace();
             }
@@ -134,24 +133,99 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
 
         final List<short[]> audioPackets = Collections.synchronizedList(new ArrayList<short[]>());
 
+        //This thread is meant to record the audio samples with android recorder.
         recordingThread = new Thread(new Runnable() {
             private Handler handler = new Handler();
 
+            @Override
             public void run() {
                 startTime = System.currentTimeMillis();
 
                 short[] tmpAudioSamples = new short[bufferElements2Rec];
                 while (recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
                     int samplesRead = recorder.read(tmpAudioSamples, 0, bufferElements2Rec);
+
                     if (samplesRead > 0) {
                         short[] samples = new short[samplesRead];
-                        System.arraycopy(tmpAudioSamples, 0, samples, 0, samplesRead);
+                        //System.arraycopy(tmpAudioSamples, 0, samples, 0, samplesRead);
+                        for (int i=0; i < samples.length; i++) {
+                            samples[i] = tmpAudioSamples[i];
+                            if (samples[i] != 0) {
+                                emptyRecord = false;
+                            }
+                        }
 
                         synchronized (audioPackets) {
                             audioPackets.add(samples);
                         }
                     }
+                }
+            }
+        }, "AudioRecorder Thread");
 
+        //This thread is meant to use the audio samples and send them to the Alize system.
+        addSamplesThread = new Thread(new Runnable() {
+            private Handler handler = new Handler();
+
+            @Override
+            public void run() {
+                short[] nextElement;
+
+                while ((recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
+                        || (!audioPackets.isEmpty())) {
+                    nextElement = null;
+
+                    synchronized (audioPackets) {
+                        if (!audioPackets.isEmpty()) {
+                            nextElement = audioPackets.get(0);
+                            audioPackets.remove(0);
+                        }
+                    }
+                    if (nextElement != null) {
+                        try {
+                            //Receive an audio signal as 16-bit signed integer linear PCM, parameterize it and add it to the feature server.
+                            alizeSystem.addAudio(nextElement);
+                        } catch (AlizeException e) {
+                            e.printStackTrace();
+                            recordError = true;
+                        } catch (Throwable e) { //TODO catch proper exception
+                            e.printStackTrace();
+                            recordError = true;
+                        }
+                    }
+                }
+
+                try {
+                    recordingThread.join(); //Wait the recordingThread to end.
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while (!audioPackets.isEmpty()) {
+                    nextElement = audioPackets.get(0);
+                    audioPackets.remove(0);
+
+                    if (nextElement != null) {
+                        try {
+                            alizeSystem.addAudio(nextElement);
+                        } catch (AlizeException e) {
+                            e.printStackTrace();
+                            recordError = true;
+                        } catch (Throwable e) { //TODO catch proper exception
+                            e.printStackTrace();
+                            recordError = true;
+                        }
+                    }
+                }
+            }
+        }, "addSamples Thread");
+
+        //This thread is meant to increase the timer with the current time.
+        timerThread = new Thread(new Runnable() {
+            private Handler handler = new Handler();
+
+            @Override
+            public void run() {
+                while((recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -161,64 +235,18 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
                             timeText.setText(result);
                         }
                     });
-                }
-            }
-        }, "AudioRecorder Thread");
-
-        addSamplesThread = new Thread(new Runnable() {
-            private Handler handler = new Handler();
-
-            @Override
-            public void run() {
-                short[] nextElement;
-                try {
-                    while ((recorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
-                            || (!audioPackets.isEmpty())) {
-                        nextElement = null;
-                        synchronized (audioPackets) {
-                            if (!audioPackets.isEmpty()) {
-                                nextElement = audioPackets.get(0);
-                                audioPackets.remove(0);
-                            }
-                        }
-                        if (nextElement != null) {
-                            try {
-                                alizeSystem.addAudio(nextElement);
-                            } catch (AlizeException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
                     try {
-                        recordingThread.join();
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    while (!audioPackets.isEmpty()) {
-                        nextElement = audioPackets.get(0);
-                        audioPackets.remove(0);
-                        if (nextElement != null) {
-                            try {
-                                alizeSystem.addAudio(nextElement);
-                            } catch (AlizeException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } catch (Throwable e) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            makeToast(getResources().getString(R.string.no_sound_detected_recoloc));
-                        }
-                    });
                 }
             }
-        }, "addSamples Thread");
+        }, "Timer Thread");
 
         recordingThread.start();
         addSamplesThread.start();
+        timerThread.start();
     }
 
     protected void stopRecording() {
@@ -229,17 +257,23 @@ public class RecordActivity extends BaseActivity implements RecognitionListener 
             try {
                 recordingThread.join();
                 addSamplesThread.join();
+                timerThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             recorder.release();
             recorder = null;
-            recordExists = true;
+            recordExists = !recordError;
             recordingThread = null;
             addSamplesThread = null;
             startRecordButton.setVisibility(View.VISIBLE);
 
-            makeToast(getResources().getString(R.string.recording_completed));
+            String resultText = getResources().getString(R.string.recording_completed);
+            if (recordError) {
+                resultText = getResources().getString(R.string.recording_not_completed);
+            }
+
+            makeToast(resultText);
             afterRecordProcessing();
         }
     }
