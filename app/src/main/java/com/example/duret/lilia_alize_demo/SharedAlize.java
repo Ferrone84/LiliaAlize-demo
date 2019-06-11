@@ -1,10 +1,12 @@
 package com.example.duret.lilia_alize_demo;
 
-import java.io.IOException;
-import java.io.InputStream;
 import android.content.Context;
 
-import AlizeSpkRec.*;
+import java.io.IOException;
+import java.io.InputStream;
+
+import AlizeSpkRec.AlizeException;
+import AlizeSpkRec.SimpleSpkDetSystem;
 
 class SharedAlize {
     private static SimpleSpkDetSystem alizeSystem;

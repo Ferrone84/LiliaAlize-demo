@@ -11,12 +11,9 @@ import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -27,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import AlizeSpkRec.AlizeException;
-
-import static android.Manifest.permission.RECORD_AUDIO;
 
 public class RecordActivity extends BaseActivity implements RecognitionListener {
 
