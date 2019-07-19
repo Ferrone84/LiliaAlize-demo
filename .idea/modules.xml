@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LiliaAlize_demo.iml" filepath="$PROJECT_DIR$/LiliaAlize_demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LiliaAlize-demo.iml" filepath="$PROJECT_DIR$/LiliaAlize-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/alize/alize.iml" filepath="$PROJECT_DIR$/alize/alize.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

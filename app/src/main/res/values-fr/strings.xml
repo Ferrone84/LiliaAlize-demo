@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Lilia-Alize démo</string>
+    <string name="hello_text">Bonjour, je m\'appelle Pepper et voici l\'application LILIA.</string>
     <string name="start_activity_name">Mode Dialogue</string>
     <string name="record_content_desc">Démarrer l\'enregistrement</string>
     <string name="start_button_value">S\'identifier</string>

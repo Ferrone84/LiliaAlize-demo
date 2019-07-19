@@ -51,7 +51,7 @@ public class NewSpeakerActivity extends BaseActivity {
     }
 
     @Override
-    public void onInit(int i) {
+    public void onInit() {
         say(getResources().getString(R.string.new_speaker_text));
     }
 
@@ -188,12 +188,6 @@ public class NewSpeakerActivity extends BaseActivity {
     }
 
     private void startDialog() {
-        say(
-        getResources().getString(R.string.hello_message_start) + " "
-                + speakerName + " "
-                + getResources().getString(R.string.hello_message_end)
-        );
-
         startActivity(DialogActivity.class, new HashMap<String, Object>(){{
             put("speakerName", speakerName);
         }});

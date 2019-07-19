@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -61,21 +62,22 @@ public class DialogActivity extends RecordActivity {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
 
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    speech.startListening(recognizerIntent);
-                } else {
-                    speech.stopListening();
-                }
+        toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                speech.startListening(recognizerIntent);
+            } else {
+                speech.stopListening();
             }
         });
     }
 
     @Override
-    public void onInit(int i) {
+    public void onInit() {
+        say(
+    getResources().getString(R.string.hello_message_start) + " "
+            + speakerName + " "
+            + getResources().getString(R.string.hello_message_end)
+        );
         connect();
     }
 
@@ -96,19 +98,16 @@ public class DialogActivity extends RecordActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private View.OnClickListener generateGoalButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (message != null) {
-                if(message.isStarted())
-                {
-                    message.stop();
-                    message.start();
-                }
-                else
-                {
-                    message.generateGoal();
-                }
+    private View.OnClickListener generateGoalButtonListener = view -> {
+        if (message != null) {
+            if(message.isStarted())
+            {
+                message.stop();
+                message.start();
+            }
+            else
+            {
+                message.generateGoal();
             }
         }
     };
@@ -194,7 +193,7 @@ public class DialogActivity extends RecordActivity {
 
         private Socket sock;
         private BufferedReader in;
-        private Handler handler = new Handler();
+        private Handler handler = new Handler(Looper.getMainLooper());
 
         private boolean started = false;
 
@@ -216,45 +215,34 @@ public class DialogActivity extends RecordActivity {
             final String finalText = text;
             final int finalIdView = idView;
 
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    TextView textView = findViewById(finalIdView);
-                    textView.setText(finalText);
-                }
+            handler.post(() -> {
+                TextView textView = findViewById(finalIdView);
+                textView.setText(finalText);
             });
         }
 
         private void setDialogText(final String text, final String author) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (author.isEmpty()) {
-                        dialogText.setText(text);
-                    }
-                    else {
-                        String boldText = "<b>" + author + "</b><br>";
-                        dialogText.append(Html.fromHtml("<br>" + boldText + text));
-                    }
-
-                    final int scrollAmount = dialogText.getLayout()
-                            .getLineTop(dialogText.getLineCount()) - dialogText.getHeight();
-
-                    if (scrollAmount > 0)
-                        dialogText.scrollTo(0, scrollAmount);
-                    else
-                        dialogText.scrollTo(0, 0);
+            handler.post(() -> {
+                if (author.isEmpty()) {
+                    dialogText.setText(text);
                 }
+                else {
+                    String boldText = "<b>" + author + "</b><br>";
+                    dialogText.append(Html.fromHtml("<br>" + boldText + text));
+                }
+
+                final int scrollAmount = dialogText.getLayout()
+                        .getLineTop(dialogText.getLineCount()) - dialogText.getHeight();
+
+                if (scrollAmount > 0)
+                    dialogText.scrollTo(0, scrollAmount);
+                else
+                    dialogText.scrollTo(0, 0);
             });
         }
 
         private void setFruitImage(final int fruitId) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    image.setImageResource(fruitId);
-                }
-            });
+            handler.post(() -> image.setImageResource(fruitId));
         }
 
         @Override
@@ -290,14 +278,11 @@ public class DialogActivity extends RecordActivity {
                         {
                             System.out.println("Receive: " + fromClient.substring(2));
                             setDialogText(fromClient.substring(2), getString(R.string.server_name));
-                            say(fromClient.substring(2), true);
+                            say(fromClient.substring(2));
                             Thread.sleep(100);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    toggleButton.setChecked(true);
-                                    //recordAudioSpeakToText();
-                                }
+                            handler.post(() -> {
+                                toggleButton.setChecked(true);
+                                //recordAudioSpeakToText();
                             });
                         }
                         else if(fromClient != null && fromClient.startsWith("hangup"))
@@ -348,12 +333,7 @@ public class DialogActivity extends RecordActivity {
             }
             catch (java.net.UnknownHostException | java.net.ConnectException e)
             {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialogText.setText("Error: "+e.getMessage());
-                    }
-                });
+                handler.post(() -> dialogText.setText("Error: "+e.getMessage()));
                 e.printStackTrace();
             }
             catch (java.io.IOException e)

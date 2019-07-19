@@ -59,12 +59,6 @@ public class HelloActivity extends RecordActivity {
                 startActivity(NewSpeakerActivity.class);
             }
             else {
-                say(
-                    getResources().getString(R.string.hello_message_start) + " "
-                    + identificationResult.speakerId + " "
-                    + getResources().getString(R.string.hello_message_end)
-                );
-
                 startActivity(DialogActivity.class, new HashMap<String, Object>(){{
                     put("speakerName", identificationResult.speakerId);
                 }});

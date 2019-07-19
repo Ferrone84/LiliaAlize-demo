@@ -32,40 +32,22 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onInit() {
+        say(getResources().getString(R.string.hello_text));
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
 
-    /*@Override
-    public void onInit(int status)
-    {
-        System.out.println("TTS try");
-        if(status == TextToSpeech.SUCCESS)
-        {
-            System.out.println("TTS Started");
-            //say("Bonjour, allez c'est parti !");
+    private View.OnClickListener startButtonListener = view -> startActivity(HelloActivity.class);
 
-            //Button startButton = findViewById(R.id.startButton);
-            //startButton.setText("Coucou");
-        }
-    }*/
-
-    private View.OnClickListener startButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            startActivity(HelloActivity.class);
-        }
+    private View.OnClickListener skipIdentificationListener = view -> {
+        startActivity(DialogActivity.class);
     };
 
-    private View.OnClickListener skipIdentificationListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            say(
-                    getResources().getString(R.string.hello_message_start) + " "
-                            + "Fabrice" + " "
-                            + getResources().getString(R.string.hello_message_end)
-            );
-            startActivity(DialogActivity.class);
-        }
-    };
+    public void launchSettingsActivity(View v) {
+        startActivity(SettingsActivity.class);
+    }
 }

@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -27,4 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
     implementation project(":alize")
+	implementation 'com.aldebaran:qisdk:1.4.8'
+	implementation 'com.aldebaran:qisdk-design:1.4.8'
 }
